@@ -1,4 +1,4 @@
-package com.cursor.enums;
+package com.cursor.model.enums;
 
 public enum Category {
     DRAM("Drama"),
