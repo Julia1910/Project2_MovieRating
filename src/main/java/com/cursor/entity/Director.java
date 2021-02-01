@@ -1,4 +1,4 @@
-package com.cursor.entity;
+package com.cursor.model;
 
 import lombok.Data;
 
