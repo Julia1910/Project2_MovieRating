@@ -1,4 +1,4 @@
-package com.cursor.models;
+package com.cursor.model;
 
 import lombok.Data;
 
