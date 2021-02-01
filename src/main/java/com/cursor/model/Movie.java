@@ -12,7 +12,8 @@ import java.util.List;
 public class Movie {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String title;
 
@@ -26,8 +27,8 @@ public class Movie {
     @ManyToMany
     @JoinTable(name = "directing",
             joinColumns =
-                    {@JoinColumn(name = "id(movie)")},
+                    {@JoinColumn(name = "movie")},
             inverseJoinColumns =
-                    {@JoinColumn(name = "id(Director)")})
+                    {@JoinColumn(name = "director")})
     private List<Director> director;
 }
