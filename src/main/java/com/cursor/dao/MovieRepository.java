@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("update Movie m set m.rating = ?2 where m.id = ?1")
-    Movie addRate(Integer rateMovieId, Double rating);
+    Movie addRating(Integer rateMovieId, Double rating);
 
     // select m from Movie m where m.rateValue not null order by m.rateValue asc
     List<Movie> findByRatingIsNotNullOrderByRatingAsc();
