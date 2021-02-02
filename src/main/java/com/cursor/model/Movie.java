@@ -26,10 +26,10 @@ public class Movie {
     private Double rating;
 
     @ManyToMany
-    @JoinTable(name = "directing",
+    @JoinTable(name = "Directing",
             joinColumns =
-                    {@JoinColumn(name = "movie")},
+                    {@JoinColumn(name = "movie_id")},
             inverseJoinColumns =
-                    {@JoinColumn(name = "director")})
+                    {@JoinColumn(name = "director_id")})
     private List<Director> director;
 }
