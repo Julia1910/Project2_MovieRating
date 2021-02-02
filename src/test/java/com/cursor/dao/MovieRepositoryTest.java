@@ -1,5 +1,7 @@
 package com.cursor.dao;
 
+import com.cursor.model.Movie;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,8 @@ class MovieRepositoryTest {
     private MovieRepository movieRepository;
 
     @Test
-    void TestAddingRating() {
-
+    void TestFindingById() {
+        Movie m = movieRepository.findById(1L).orElseThrow();
+        System.out.println(m);
     }
 }
