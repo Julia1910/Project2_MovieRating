@@ -3,6 +3,7 @@ package com.cursor.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Directors")
@@ -15,6 +16,6 @@ public class Director {
     private String firstName;
     private String lastName;
 
-    @ManyToOne(mappedBy = "director")
+    @ManyToMany(mappedBy = "director")
     List<Movie> movieList;
 }
