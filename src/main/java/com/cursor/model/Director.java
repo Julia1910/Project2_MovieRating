@@ -18,4 +18,13 @@ public class Director {
 
     @ManyToMany(mappedBy = "director")
     List<Movie> movieList;
+
+    @Override
+    public String toString() {
+        return "Director{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }
