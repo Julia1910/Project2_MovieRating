@@ -8,5 +8,4 @@ import java.util.List;
 public class DirectorDto {
     private String firstName;
     private String lastName;
-    private List<MovieDto> movies;
 }

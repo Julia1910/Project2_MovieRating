@@ -24,24 +24,6 @@ class ReviewServiceImplTest {
 
     @Test
     void add() {
-        ReviewDto reviewDto = new ReviewDto();
-        MovieDto movieDto = new MovieDto();
-        movieDto.setTitle("American Pie");
-        movieDto.setShortDescription("Stupid movie");
-        List<Category> categories = new ArrayList<>();
-        categories.add(Category.COM);
-        movieDto.setCategory(categories);
-        List<DirectorDto> directorDtos = new ArrayList<>();
-        DirectorDto directorDto = new DirectorDto();
-        directorDto.setFirstName("Eugene");
-        directorDto.setLastName("Levy");
-        directorDtos.add(directorDto);
-        movieDto.setDirectors(directorDtos);
-        reviewDto.setLiked(true);
-        reviewDto.setMovie(movieDto);
-        reviewDto.setReviewMessage("Some review message");
-        ReviewDto reviewDto1 = reviewService.add(reviewDto);
-        assertEquals(reviewDto, reviewDto1);
     }
 
     @Test
