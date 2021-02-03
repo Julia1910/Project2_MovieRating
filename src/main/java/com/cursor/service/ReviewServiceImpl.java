@@ -1,5 +1,6 @@
 package com.cursor.service;
 
+import com.cursor.dao.MovieRepository;
 import com.cursor.dao.ReviewRepository;
 import com.cursor.dto.ReviewDto;
 import com.cursor.model.Review;
@@ -54,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private Review setReview(ReviewDto reviewDto) {
         Review review = new Review();
-        review.setMovie(movieRepository.findById(reviewDto.getMovieId()));
+        review.setMovie(movieRepository.findById(reviewDto.getMovieId()).orElseThrow());
         review.setLiked(reviewDto.getLiked());
         review.setReviewMessage(reviewDto.getReviewMessage());
         return review;
