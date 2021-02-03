@@ -18,4 +18,13 @@ public class Director {
 
     @ManyToMany
     List<Movie> movieList;
+
+    @Override
+    public String toString() {
+        return "Director{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }

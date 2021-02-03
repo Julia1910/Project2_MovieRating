@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface MovieService extends Service<MovieDto> {
     MovieDto addRate(MovieDto movie, int rate);
-    List<MovieDto> getAllByRating();
-    List<MovieDto> getAllByCategory(Category category);
 
+    List<MovieDto> getAllByRatingAsc();
+
+    List<MovieDto> getAllByRatingDesc();
+
+    List<MovieDto> getAllByCategory(Category category);
 }
