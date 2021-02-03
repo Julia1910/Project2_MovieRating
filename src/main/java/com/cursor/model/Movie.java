@@ -35,5 +35,5 @@ public class Movie {
                     {@JoinColumn(name = "movie_id")},
             inverseJoinColumns =
                     {@JoinColumn(name = "director_id")})
-    private Set<Director> director;
+    private List<Director> director;
 }
