@@ -1,4 +1,4 @@
-package com.cursor.service;
+package com.cursor.service.interfaces;
 
 import com.cursor.dto.MovieDto;
 import com.cursor.model.enums.Category;

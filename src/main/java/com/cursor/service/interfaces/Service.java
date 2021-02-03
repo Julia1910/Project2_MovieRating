@@ -1,10 +1,10 @@
-package com.cursor.service;
+package com.cursor.service.interfaces;
 
 import java.util.List;
 
 public interface Service<T> {
     T add(T t);
-    T getById(int id);
+    T getById(Long id);
     List<T> getAll();
-    T remove(int id);
+    void remove(Long id);
 }
