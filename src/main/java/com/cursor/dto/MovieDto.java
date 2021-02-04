@@ -12,8 +12,8 @@ public class MovieDto {
     private Set<Category> category;
     private String shortDescription;
     private Double rateValue;
-    private List<DirectorDto> director;
-
+    private List<DirectorDto> directors;
+  
     @Override
     public String toString() {
         return "MovieDto{" +

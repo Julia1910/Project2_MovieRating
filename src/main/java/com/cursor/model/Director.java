@@ -17,8 +17,8 @@ public class Director {
     private String lastName;
 
     @ManyToMany(mappedBy = "director")
-    List<Movie> movie;
-
+    List<Movie> movies;
+  
     @Override
     public String toString() {
         return "Director{" +
