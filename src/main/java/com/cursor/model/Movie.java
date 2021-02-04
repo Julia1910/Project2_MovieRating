@@ -36,4 +36,15 @@ public class Movie {
             inverseJoinColumns =
                     {@JoinColumn(name = "director_id")})
     private List<Director> director;
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }
