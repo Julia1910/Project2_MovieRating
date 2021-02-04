@@ -3,6 +3,7 @@ package com.cursor.service.impls;
 import com.cursor.dao.MovieRepository;
 import com.cursor.dao.RateRepository;
 import com.cursor.dto.MovieDto;
+import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.Movie;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
@@ -68,8 +69,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDto getById(Long id) {
-        return modelMapper.map(movieRepository.findById(id), MovieDto.class);
+    public MovieDto getById(Long id) throws NotFoundException {
+            return movieRepository.findById(id).
+                    map(movie -> modelMapper.map(movie, MovieDto.class))
+                    .orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override

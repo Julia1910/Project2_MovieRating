@@ -9,7 +9,7 @@ import java.util.List;
 public class MovieDto {
     private String title;
     private List<Category> category;
-    private String shortDescription;
-    private Double rateValue;
+    private String description;
+    private Double rating;
     private List<DirectorDto> director;
 }
