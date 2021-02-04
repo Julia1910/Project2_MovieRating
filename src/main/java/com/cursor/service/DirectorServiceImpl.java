@@ -52,16 +52,28 @@ public class DirectorServiceImpl implements DirectorService {
         director.setFirstName(directorDto.getFirstName());
         director.setLastName(directorDto.getLastName());
         List<Movie> movieList = new ArrayList<>();
-        for (MovieDto m : directorDto.getMovie()) {
+        for (MovieDto m : directorDto.getMovies()) {
             Movie movie = new Movie();
             movie.setTitle(m.getTitle());
             movie.setRating(m.getRateValue());
             movie.setDescription(m.getShortDescription());
             movie.setCategory(m.getCategory());
+            movie.setDirectors(directorDtoToDirector(m.getDirectors()));
             movieList.add(movie);
         }
-        director.setMovie(movieList);
+        director.setMovies(movieList);
         return director;
+    }
+
+    public static List<Director> directorDtoToDirector(List<DirectorDto> directorList) {
+        List<Director> directors = new ArrayList<>();
+        for (DirectorDto d: directorList) {
+            Director director = new Director();
+            director.setFirstName(d.getFirstName());
+            director.setLastName(d.getLastName());
+            directors.add(director);
+        }
+        return directors;
     }
 
     public static DirectorDto entityToDto(Director director) {
@@ -69,15 +81,27 @@ public class DirectorServiceImpl implements DirectorService {
         directorDto.setFirstName(director.getFirstName());
         directorDto.setLastName(director.getLastName());
         List<MovieDto> movieList = new ArrayList<>();
-        for (Movie m : director.getMovie()) {
+        for (Movie m : director.getMovies()) {
             MovieDto movie = new MovieDto();
             movie.setTitle(m.getTitle());
             movie.setRateValue(m.getRating());
             movie.setShortDescription(m.getDescription());
             movie.setCategory(m.getCategory());
+            movie.setDirectors(directorToDirectorDto(m.getDirectors()));
             movieList.add(movie);
         }
-        directorDto.setMovie(movieList);
+        directorDto.setMovies(movieList);
         return directorDto;
+    }
+
+    public static List<DirectorDto> directorToDirectorDto(List<Director> directorList) {
+        List<DirectorDto> directorDtos = new ArrayList<>();
+        for (Director d: directorList) {
+            DirectorDto directorDto = new DirectorDto();
+            directorDto.setFirstName(d.getFirstName());
+            directorDto.setLastName(d.getLastName());
+            directorDtos.add(directorDto);
+        }
+        return directorDtos;
     }
 }

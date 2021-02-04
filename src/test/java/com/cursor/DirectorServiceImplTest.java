@@ -9,10 +9,7 @@ import com.cursor.service.DirectorServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DirectorServiceImplTest {
 
@@ -32,9 +29,9 @@ public class DirectorServiceImplTest {
         movie1Dto.setCategory(categoriesDto);
         movie1Dto.setShortDescription("Cry cry cry");
         movie1Dto.setRateValue(rate);
-        movie1Dto.setDirector(directorDtos);
+        movie1Dto.setDirectors(directorDtos);
         gDto.add(movie1Dto);
-        directorMax.setMovie(gDto);
+        directorMax.setMovies(gDto);
         return directorMax;
     }
 
@@ -54,9 +51,9 @@ public class DirectorServiceImplTest {
         movie.setCategory(categories);
         movie.setDescription("Cry cry cry");
         movie.setRating(rate);
-        movie.setDirector(director);
+        movie.setDirectors(director);
         movieList.add(movie);
-        directorMax.setMovie(movieList);
+        directorMax.setMovies(movieList);
         return directorMax;
     }
 
@@ -68,7 +65,8 @@ public class DirectorServiceImplTest {
 
         Assert.assertEquals(directorDtoExample.getFirstName(), directorDtoActual.getFirstName());
         Assert.assertEquals(directorDtoExample.getLastName(), directorDtoActual.getLastName());
-        Assert.assertEquals(directorDtoExample.getMovie(), directorDtoActual.getMovie());  //do not works
+        Assert.assertEquals(Arrays.toString(directorDtoExample.getMovies().toArray())
+                , Arrays.toString(directorDtoActual.getMovies().toArray()));
     }
 }
 
