@@ -1,38 +1,38 @@
-package com.cursor.dao;
+package com.cursor.service;
 
 import com.cursor.dto.MovieDto;
 import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.enums.Category;
-import com.cursor.service.impls.MovieServiceImpl;
-
+import com.cursor.service.MovieServiceImpl;
 import org.junit.Assert;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 
 // TODO: Not all tests will pass now due to missing logic.
 //  Please implement the missing logic to pass TestAllGetByRatingDesc / Asc test
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MovieServiceImplTest {
+class MovieServiceImplTest {
     @Autowired
     private MovieServiceImpl movieServiceImpl;
 
     @Test
     @Order(1)
-    public void TestAdd(){
+    void TestAdd() {
         MovieDto movieDto = new MovieDto();
         int i = 0;
-        for (Category category: Category.values()){
+        for (Category category : Category.values()) {
             i++;
             movieDto.setTitle(String.format("some movie %s", i));
-            movieDto.setDescription(String.format("some movie description %s",i));
+            movieDto.setDescription(String.format("some movie description %s", i));
             movieDto.setCategory(Collections.singletonList(category));
             Assert.assertNotNull(movieServiceImpl.add(movieDto));
             System.out.println(movieDto);
@@ -41,26 +41,26 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(2)
-    public void TestFindById() throws NotFoundException {
+    void TestFindById() throws NotFoundException {
         Long id = 69L;
-        MovieDto movieDto =  movieServiceImpl.getById(id);
-        Assert.assertNotNull(String.format("record with id = %s not found",id),movieDto);
+        MovieDto movieDto = movieServiceImpl.getById(id);
+        Assert.assertNotNull(String.format("record with id = %s not found", id), movieDto);
         System.out.println(movieDto);
     }
 
     @Test
     @Order(3)
-    public void TestFindAll(){
+    void TestFindAll() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAll();
-        Assert.assertNotNull("movies not found",movieDtoList);
+        Assert.assertNotNull("movies not found", movieDtoList);
         movieDtoList.forEach(System.out::println);
     }
 
     @Test
     @Order(4)
-    public void TestGetAllByRatingDesc(){
+    void TestGetAllByRatingDesc() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByRatingDesc();
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -68,9 +68,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(5)
-    public void TestAllGetByRatingAsc(){
+    void TestAllGetByRatingAsc() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByRatingAsc();
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -78,9 +78,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(6)
-    public void TestGetAllByCategoryAction(){
+    void TestGetAllByCategoryAction() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.ACT);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = action not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -88,18 +88,19 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(7)
-    public void TestGetAllByCategoryComedy(){
+    void TestGetAllByCategoryComedy() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.COM);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = comedy not found");
         }
         movieDtoList.forEach(System.out::println);
     }
+
     @Test
     @Order(8)
-    public void TestGetAllByCategoryDetective() {
+    void TestGetAllByCategoryDetective() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.DET);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = detective not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -107,9 +108,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(9)
-    public void TestGetAllByCategoryDrama(){
+    void TestGetAllByCategoryDrama() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.DRAM);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = drama not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -117,9 +118,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(10)
-    public void TestGetAllByCategoryMusical(){
+    void TestGetAllByCategoryMusical() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.MUS);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = musical not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -127,9 +128,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(11)
-    public void TestGetAllByCategoryRomance(){
+    void TestGetAllByCategoryRomance() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.ROM);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = romance not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -137,9 +138,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(12)
-    public void TestGetAllByCategoryRomanticComedy(){
+    void TestGetAllByCategoryRomanticComedy() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.COM);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = romantic comedy not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -147,9 +148,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(13)
-    public void TestGetAllByCategoryScienceFiction(){
+    void TestGetAllByCategoryScienceFiction() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.SCI_FI);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = science fiction not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -157,9 +158,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(14)
-    public void TestGetAllByCategoryThriller(){
+    void TestGetAllByCategoryThriller() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.THR);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = thriller not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -167,9 +168,9 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(15)
-    public void TestGetAllByCategoryHorror(){
+    void TestGetAllByCategoryHorror() {
         List<MovieDto> movieDtoList = movieServiceImpl.getAllByCategory(Category.HOR);
-        if (movieDtoList.size() == 0){
+        if (movieDtoList.size() == 0) {
             Assert.fail("movies with category = horror not found");
         }
         movieDtoList.forEach(System.out::println);
@@ -177,8 +178,8 @@ public class MovieServiceImplTest {
 
     @Test
     @Order(16)
-    public void TestDelete(){
-         movieServiceImpl.remove(69L);
+    void TestDelete() {
+        movieServiceImpl.remove(69L);
     }
 
     @Test
@@ -188,11 +189,11 @@ public class MovieServiceImplTest {
         expectedMovie.setTitle("Harry Potter");
         expectedMovie.setDescription("Movie about a boy, who survived");
         expectedMovie.setCategory(List.of(Category.DRAM));
-        expectedMovie.setDirector(List.of());
+        expectedMovie.setDirectors(List.of());
 
         MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
 
-        expectedMovie.setRating(7.0);
+        expectedMovie.setRating(7.5);
 
 
         Assert.assertEquals(expectedMovie, actualMovie);

@@ -41,7 +41,7 @@ class MovieRepositoryTest {
         expectedMovie.setDescription(description);
         expectedMovie.setCategory(Set.of(Category.DRAM));
         List<Director> directors =  new ArrayList<>();
-        expectedMovie.setDirector(directors);
+        expectedMovie.setDirectors(directors);
 
         Movie actualMovie = movieRepository.findByTitleAndDescription(title, description);
 

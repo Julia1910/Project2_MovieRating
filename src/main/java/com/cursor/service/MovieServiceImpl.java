@@ -1,4 +1,4 @@
-package com.cursor.service.impls;
+package com.cursor.service;
 
 import com.cursor.dao.MovieRepository;
 import com.cursor.dao.RateRepository;
