@@ -11,5 +11,5 @@ public class MovieDto {
     private List<Category> category;
     private String description;
     private Double rating;
-    private List<DirectorDto> director;
+    private List<DirectorDto> directors;
 }
