@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Service<T> {
     T add(T t);
-    T getById(Long id) throws NotFoundException;
+    T getById(Long id);
     List<T> getAll();
     void remove(Long id);
 }

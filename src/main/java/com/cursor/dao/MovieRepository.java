@@ -15,4 +15,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByRatingIsNotNullOrderByRatingDesc();
 
     List<Movie> findByCategory(Category category);
+
+    Movie findByTitleAndDescription(String title, String description);
 }

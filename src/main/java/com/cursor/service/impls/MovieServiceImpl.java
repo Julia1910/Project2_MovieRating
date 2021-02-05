@@ -5,6 +5,7 @@ import com.cursor.dao.RateRepository;
 import com.cursor.dto.MovieDto;
 import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.Movie;
+import com.cursor.model.Rate;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
 import org.modelmapper.ModelMapper;
@@ -19,7 +20,7 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
 
-    private final RateRepository rateRepository; // TODO utilize later
+    private final RateRepository rateRepository;
 
     private final ModelMapper modelMapper;
 
@@ -32,7 +33,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addRate(MovieDto movie, int rate) {
-        return null; // TODO add logic for this method and add related method prototype to repository
+        String title = movie.getTitle();
+        String description = movie.getDescription();
+        Movie movie1 = movieRepository.findByTitleAndDescription(title, description);
+        Long movieId = movie1.getId();
+        Rate movieRate = new Rate();
+        movieRate.setMovie(movie1);
+        movieRate.setRating(rate);
+        rateRepository.save(movieRate);
+        return getById(movieId);
     }
 
     @Override
@@ -69,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDto getById(Long id) throws NotFoundException {
+    public MovieDto getById(Long id) {
             return movieRepository.findById(id).
                     map(movie -> modelMapper.map(movie, MovieDto.class))
                     .orElseThrow(() -> new NotFoundException(id));

@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 // TODO: Not all tests will pass now due to missing logic.
@@ -178,5 +179,22 @@ public class MovieServiceImplTest {
     @Order(16)
     public void TestDelete(){
          movieServiceImpl.remove(69L);
+    }
+
+    @Test
+    @Order(17)
+    void testAddRate() {
+        MovieDto expectedMovie = new MovieDto();
+        expectedMovie.setTitle("Harry Potter");
+        expectedMovie.setDescription("Movie about a boy, who survived");
+        expectedMovie.setCategory(List.of(Category.DRAM));
+        expectedMovie.setDirector(List.of());
+
+        MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
+
+        expectedMovie.setRating(7.0);
+
+
+        Assert.assertEquals(expectedMovie, actualMovie);
     }
 }
