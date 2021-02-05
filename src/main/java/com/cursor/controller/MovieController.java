@@ -77,7 +77,15 @@ public class MovieController {
             value = "/stats/rating",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MovieDto>> getAllByRating() {
+    public ResponseEntity<List<MovieDto>> getAllByRatingAsc() {
+        return null;
+    }
+
+    @GetMapping(
+            value = "/stats/rating/desc",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<MovieDto>> getAllByRatingDesc() {
         return null;
     }
 
