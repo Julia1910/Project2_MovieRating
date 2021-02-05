@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReviewDto {
-    private MovieDto movie;
+    private Long movieId;
     private String reviewMessage;
     private Boolean liked;
 }
