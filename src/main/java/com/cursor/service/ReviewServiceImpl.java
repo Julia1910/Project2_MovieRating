@@ -4,6 +4,7 @@ import com.cursor.dao.MovieRepository;
 import com.cursor.dao.ReviewRepository;
 import com.cursor.dto.ReviewDto;
 import com.cursor.model.Review;
+import com.cursor.service.interfaces.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,11 +51,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDto remove(Long id) {
+    public void remove(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow();
         ReviewDto reviewDto = setReviewDto(review);
         reviewRepository.delete(review);
-        return reviewDto;
     }
 
     private Review setReview(ReviewDto reviewDto) {
