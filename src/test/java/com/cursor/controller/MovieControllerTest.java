@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
+import com.cursor.exceptions.IncorrectMovieDtoException;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
 import org.junit.jupiter.api.*;
@@ -20,7 +21,7 @@ class MovieControllerTest extends BaseControllerTest {
     MovieController movieController;
 
     @Mock
-    private MovieService movieService;
+    private MovieService movieServiceMock;
 
     private final MovieDto movieDto;
     private final MovieDto emptyMovieDto;
@@ -81,38 +82,38 @@ class MovieControllerTest extends BaseControllerTest {
     }
 
     @BeforeEach
-    void setUpMovieService() {
+    void setUpMovieService() throws IncorrectMovieDtoException {
 //        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
-        Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
+        Mockito.when(movieServiceMock.add(movieDto)).thenReturn(movieDto);
 //        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
-        Mockito.when(movieService.getById(1L)).thenReturn(movieDto);
+        Mockito.when(movieServiceMock.getById(1L)).thenReturn(movieDto);
 
         Mockito.when(
-                movieService.addRate(
+                movieServiceMock.addRate(
                         this.movieDto,
-                        this.movieDto.getRateValue().intValue())
+                        this.movieDto.getRating().intValue())
         )
                 .thenReturn(this.movieDto);
 
-        Mockito.when(movieService.getAll())
+        Mockito.when(movieServiceMock.getAll())
                 .thenReturn(new ArrayList<>())
                 .thenReturn(movieDtos);
 
-        Mockito.when(movieService.getAllByRatingAsc())
+        Mockito.when(movieServiceMock.getAllByRatingAsc())
                 .thenReturn(movieDtos)
                 .thenReturn(new ArrayList<>());
 
-        Mockito.when(movieService.getAllByRatingDesc())
+        Mockito.when(movieServiceMock.getAllByRatingDesc())
                 .thenReturn(new ArrayList<>())
                 .thenReturn(movieDtos);
 
-        Mockito.when(movieService.getAllByCategory(Category.COM))
+        Mockito.when(movieServiceMock.getAllByCategory(Category.COM))
                 .thenReturn(movieDtos)
                 .thenReturn(new ArrayList<>());
     }
 
     @Test
-    void addMovieSuccessTest() {
+    void addMovieSuccessTest() throws IncorrectMovieDtoException {
 //        Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
 
         ResponseEntity<MovieDto> responseEntity = movieController.addMovie(movieDto);
@@ -141,7 +142,7 @@ class MovieControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void addMovieExpectNotAcceptableStatusTest() {
+    void addMovieExpectNotAcceptableStatusTest() throws IncorrectMovieDtoException {
         ResponseEntity<MovieDto> responseEntity = movieController.addMovie(emptyMovieDto);
 
         assertThat(responseEntity.getStatusCode())
@@ -159,9 +160,9 @@ class MovieControllerTest extends BaseControllerTest {
     void removeMovieSuccessTest() {
 //        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
 
-        ResponseEntity<HttpStatus> responseEntity = movieController.remove(1L);
+        ResponseEntity<MovieDto> responseEntity = movieController.remove(1L);
 
-        MovieDto movieDto = movieService.remove(1L);
+        MovieDto movieDto = responseEntity.getBody();
 
         assertEquals(movieDto, responseEntity.getBody());
 
@@ -190,7 +191,7 @@ class MovieControllerTest extends BaseControllerTest {
     void removeMovieExpectNotFoundStatusTest() {
 //        Mockito.when(movieService.remove(-1)).thenThrow(new MovieController.UncorrectIdException(); // in UserServiceImpl should be used some custom exception
 
-        ResponseEntity<HttpStatus> responseEntity = movieController.remove(-1L);
+        ResponseEntity<MovieDto> responseEntity = movieController.remove(-1L);
 
         assertThat(responseEntity.getStatusCode())
                 .isEqualTo(HttpStatus.NOT_FOUND);
@@ -202,7 +203,7 @@ class MovieControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void updateInfoSuccessTest() {
+    void updateInfoSuccessTest() throws IncorrectMovieDtoException {
 //        Mockito.when(movieService.add(this.movieDto)).thenReturn(this.movieDto);
 
         MovieDto updatedMovieDto = movieDto;
@@ -215,7 +216,7 @@ class MovieControllerTest extends BaseControllerTest {
                 )
         );
 
-        Mockito.when(movieService.add(updatedMovieDto)).thenReturn(updatedMovieDto);
+        Mockito.when(movieServiceMock.add(updatedMovieDto)).thenReturn(updatedMovieDto);
 
         ResponseEntity<MovieDto> responseEntity = movieController.updateInfo(updatedMovieDto, 1L);
 
@@ -320,7 +321,7 @@ class MovieControllerTest extends BaseControllerTest {
         ResponseEntity<MovieDto> responseEntity = movieController
                 .addRate(
                         movieDto,
-                        this.movieDto.getRateValue().intValue()
+                        this.movieDto.getRating().intValue()
                 );
 
         assertThat(responseEntity.getStatusCode())

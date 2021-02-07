@@ -16,7 +16,7 @@ public class Director {
     private String firstName;
     private String lastName;
 
-    @ManyToMany(mappedBy = "directors")
+    @ManyToMany(mappedBy = "directors", cascade = CascadeType.ALL)
     List<Movie> movies;
 
     @Override

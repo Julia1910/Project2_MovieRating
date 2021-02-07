@@ -1,9 +1,9 @@
 package com.cursor.service;
 
 import com.cursor.dto.MovieDto;
+import com.cursor.exceptions.IncorrectMovieDtoException;
 import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.enums.Category;
-import com.cursor.service.MovieServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ class MovieServiceImplTest {
         for (Category category : Category.values()) {
             i++;
             movieDto.setTitle(String.format("some movie %s", i));
-            movieDto.setShortDescription(String.format("some movie description %s", i));
+            movieDto.setDescription(String.format("some movie description %s", i));
             movieDto.setCategory(Set.of(category));
             Assert.assertNotNull(movieServiceImpl.add(movieDto));
             System.out.println(movieDto);
@@ -42,7 +41,7 @@ class MovieServiceImplTest {
 
     @Test
     @Order(2)
-    void TestFindById() throws NotFoundException {
+    void TestFindById() {
         Long id = 69L;
         MovieDto movieDto = movieServiceImpl.getById(id);
         Assert.assertNotNull(String.format("record with id = %s not found", id), movieDto);
@@ -188,13 +187,13 @@ class MovieServiceImplTest {
     void testAddRate() {
         MovieDto expectedMovie = new MovieDto();
         expectedMovie.setTitle("Harry Potter");
-        expectedMovie.setShortDescription("Movie about a boy, who survived");
+        expectedMovie.setDescription("Movie about a boy, who survived");
         expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
         MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
 
-        expectedMovie.setRateValue(7.5);
+        expectedMovie.setRating(7.5);
 
 
         Assert.assertEquals(expectedMovie, actualMovie);

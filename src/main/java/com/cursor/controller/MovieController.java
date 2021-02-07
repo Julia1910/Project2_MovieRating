@@ -1,12 +1,19 @@
 package com.cursor.controller;
 
 import com.cursor.dto.MovieDto;
+import com.cursor.exceptions.IncorrectIdException;
+import com.cursor.exceptions.IncorrectMovieDtoException;
+import com.cursor.exceptions.IncorrectRateException;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
@@ -14,19 +21,19 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
-    private final boolean checkMovieDtoFlag = true;
-    private final boolean checkIdFlag = true;
+    private final boolean checkMovieDtoFlag = false;
+    private final boolean checkIdFlag = false;
     private final boolean checkRateFlag = true;
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
-    private void checkMovieDto(MovieDto movieDto) throws IncorrectMovieDtoException {
+    /*private void checkMovieDto(MovieDto movieDto) throws IncorrectMovieDtoException {
         if (movieDto.getTitle().isBlank() || movieDto.getCategory().isEmpty()
                 || movieDto.getShortDescription().isBlank())
             throw new IncorrectMovieDtoException("MovieDto's details are incorrect");
-    }
+    }*/
 
     private void checkId(Long id) throws IncorrectIdException {
         if (id < 0)
@@ -43,14 +50,14 @@ public class MovieController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) {
-        if (checkMovieDtoFlag) {
+    public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) throws IncorrectMovieDtoException {
+        /*if (checkMovieDtoFlag) {
             try {
                 checkMovieDto(movieDto);
             } catch (IncorrectMovieDtoException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
-        }
+        }*/
 
         MovieDto movieDtoFromService = movieService.add(movieDto);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.CREATED);
@@ -60,17 +67,17 @@ public class MovieController {
             value = "/admin/movie/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> remove(@PathVariable Long id) {
-        if (checkIdFlag) {
+    public ResponseEntity<MovieDto> remove(@PathVariable Long id) {
+        /*if (checkIdFlag) {
             try {
                 checkId(id);
             } catch (IncorrectIdException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }
+        }*/
 
-        movieService.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        MovieDto movieDtoFromService = movieService.remove(id);
+        return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 
     @PostMapping(
@@ -82,23 +89,23 @@ public class MovieController {
             @RequestBody MovieDto movieDto,
             @PathVariable Long id) {
 
-        if (checkIdFlag) {
+        /*if (checkIdFlag) {
             try {
                 checkId(id);
             } catch (IncorrectIdException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }
+        }*/
 
-        if (checkMovieDtoFlag) {
+        /*if (checkMovieDtoFlag) {
             try {
                 checkMovieDto(movieDto);
             } catch (IncorrectMovieDtoException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
-        }
+        }*/
 
-        MovieDto movieDtoFromService = movieService.add(movieDto);
+        MovieDto movieDtoFromService = movieService.update(movieDto, id);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 
@@ -107,13 +114,17 @@ public class MovieController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<MovieDto> getById(@PathVariable Long id) {
-        if (checkIdFlag) {
+        /*if (checkIdFlag) {
             try {
                 checkId(id);
-            } catch (IncorrectIdException e) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } catch (IncorrectIdException exception) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        exception.getMessage(),
+                        exception
+                );
             }
-        }
+        }*/
 
         MovieDto movieDtoFromService = movieService.getById(id);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
@@ -127,21 +138,21 @@ public class MovieController {
     public ResponseEntity<MovieDto> addRate(
             @RequestBody MovieDto movieDto,
             @PathVariable int rate) {
-        if (checkMovieDtoFlag) {
+        /*if (checkMovieDtoFlag) {
             try {
                 checkMovieDto(movieDto);
             } catch (IncorrectMovieDtoException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }
+        }*/
 
-        if (checkRateFlag) {
+        /*if (checkRateFlag) {
             try {
                 checkRate(rate);
             } catch (IncorrectRateException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
-        }
+        }*/
 
         MovieDto movieDtoFromController = movieService.addRate(movieDto, rate);
         return new ResponseEntity<>(movieDtoFromController, HttpStatus.OK);
@@ -198,31 +209,5 @@ public class MovieController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(movieDtosFromService, HttpStatus.OK);
-    }
-
-    class IncorrectMovieDtoException extends Throwable {
-        private String message;
-
-        public IncorrectMovieDtoException(String message) {
-            super(message);
-            this.message = message;
-        }
-
-        @Override
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    class IncorrectIdException extends Throwable {
-        public IncorrectIdException(String message) {
-            super(message);
-        }
-    }
-
-    class IncorrectRateException extends Throwable {
-        public IncorrectRateException(String message) {
-            super(message);
-        }
     }
 }

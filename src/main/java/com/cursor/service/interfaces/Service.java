@@ -1,5 +1,6 @@
 package com.cursor.service.interfaces;
 
+import com.cursor.exceptions.IncorrectMovieDtoException;
 import com.cursor.exceptions.NotFoundException;
 
 import java.util.List;

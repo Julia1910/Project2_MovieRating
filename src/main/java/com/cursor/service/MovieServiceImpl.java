@@ -1,19 +1,27 @@
 package com.cursor.service;
 
+import com.cursor.controller.MovieController;
 import com.cursor.dao.MovieRepository;
 import com.cursor.dao.RateRepository;
+import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
 import com.cursor.exceptions.NotFoundException;
+import com.cursor.exceptions.IncorrectMovieDtoException;
+import com.cursor.exceptions.IncorrectRateException;
+import com.cursor.model.Director;
 import com.cursor.model.Movie;
 import com.cursor.model.Rate;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -33,8 +41,18 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addRate(MovieDto movie, int rate) {
+        try {
+            checkRate(rate);
+        } catch (IncorrectRateException exception) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    exception.getMessage(),
+                    exception
+            );
+        }
+
         String title = movie.getTitle();
-        String description = movie.getShortDescription();
+        String description = movie.getDescription();
         Movie movie1 = movieRepository.findByTitleAndDescription(title, description);
         Long movieId = movie1.getId();
         Rate movieRate = new Rate();
@@ -73,6 +91,16 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto add(MovieDto movieDto) {
+        try {
+            checkMovieDto(movieDto);
+        } catch (IncorrectMovieDtoException exception) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    exception.getMessage(),
+                    exception
+            );
+        }
+
         Movie savedMovie = movieRepository.save(modelMapper.map(movieDto, Movie.class));
         return modelMapper.map(savedMovie, MovieDto.class);
     }
@@ -96,7 +124,51 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto remove(Long id) {
+        MovieDto movieDto = getById(id);
         movieRepository.deleteById(id);
-        return getById(id);
+        return movieDto;
+    }
+
+    @Override
+    public MovieDto update(MovieDto movieDto, Long id) {
+        Movie movieFromDatabase = movieRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(id));
+
+        try {
+            checkMovieDto(movieDto);
+        } catch (IncorrectMovieDtoException exception) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    exception.getMessage(),
+                    exception
+            );
+        }
+
+        List<Director> directors = new ArrayList<>();
+
+        for (DirectorDto directorDto : movieDto.getDirectors()) {
+            directors.add(modelMapper.map(directorDto, Director.class));
+        }
+
+        movieFromDatabase.setTitle(movieDto.getTitle());
+        movieFromDatabase.setCategory(movieDto.getCategory());
+        movieFromDatabase.setDescription(movieDto.getDescription());
+        movieFromDatabase.setRating(movieDto.getRating());
+        movieFromDatabase.setDirectors(directors);
+
+        movieRepository.save(movieFromDatabase);
+
+        return movieDto;
+    }
+
+    private void checkMovieDto(MovieDto movieDto) throws IncorrectMovieDtoException {
+        if (movieDto.getTitle().isBlank() || movieDto.getCategory().isEmpty()
+                || movieDto.getDescription().isBlank())
+            throw new IncorrectMovieDtoException("MovieDto's details are incorrect");
+    }
+
+    private void checkRate(int rate) throws IncorrectRateException {
+        if (rate < 0 || rate > 10)
+            throw new IncorrectRateException("The rate value is incorrect");
     }
 }

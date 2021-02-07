@@ -14,7 +14,7 @@ import java.util.Set;
 public class MovieDto {
     private String title;
     private Set<Category> category;
-    private String shortDescription;
-    private Double rateValue;
+    private String description;
+    private Double rating;
     private List<DirectorDto> directors;
 }
