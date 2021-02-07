@@ -2,8 +2,6 @@ package com.cursor.controller;
 
 import com.cursor.MovieRatingApplication;
 import com.cursor.dto.DirectorDto;
-import com.cursor.service.interfaces.DirectorService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,7 +72,7 @@ class DirectorControllerTest {
         directorDto.setLastName("Cronenberg");
         directorDto.setMovies(List.of());
 
-        mockMvc.perform( MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                 .post("/directors")
                 .content(asJsonString(directorDto))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +94,7 @@ class DirectorControllerTest {
     @SneakyThrows
     @Test
     void remove() {
-        mockMvc.perform( MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                 .delete("/directors/{id}", 4))
                 .andExpect(status().isOk());
     }
