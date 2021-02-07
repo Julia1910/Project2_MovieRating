@@ -1,6 +1,7 @@
 package com.cursor.service;
 
 import com.cursor.dto.ReviewDto;
+import com.cursor.service.interfaces.ReviewService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

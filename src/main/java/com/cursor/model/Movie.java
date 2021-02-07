@@ -3,10 +3,8 @@ package com.cursor.model;
 import com.cursor.model.enums.Category;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
