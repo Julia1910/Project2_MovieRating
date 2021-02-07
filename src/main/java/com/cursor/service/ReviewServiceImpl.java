@@ -35,8 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto getById(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow();
-        ReviewDto reviewDto = setReviewDto(review);
-        return reviewDto;
+        return setReviewDto(review);
     }
 
     @Override

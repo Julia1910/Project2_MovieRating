@@ -1,9 +1,7 @@
 package com.cursor.handlers;
 
-import com.cursor.exceptions.IncorrectIdException;
 import com.cursor.exceptions.IncorrectMovieDtoException;
 import com.cursor.exceptions.IncorrectRateException;
-import com.cursor.exceptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

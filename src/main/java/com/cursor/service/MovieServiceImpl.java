@@ -1,6 +1,5 @@
 package com.cursor.service;
 
-import com.cursor.controller.MovieController;
 import com.cursor.dao.MovieRepository;
 import com.cursor.dao.RateRepository;
 import com.cursor.dto.DirectorDto;
@@ -21,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -54,6 +52,14 @@ public class MovieServiceImpl implements MovieService {
         String title = movie.getTitle();
         String description = movie.getDescription();
         Movie movie1 = movieRepository.findByTitleAndDescription(title, description);
+
+        if (movie1 == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "The movie was not found"
+            );
+        }
+
         Long movieId = movie1.getId();
         Rate movieRate = new Rate();
         movieRate.setMovie(movie1);
