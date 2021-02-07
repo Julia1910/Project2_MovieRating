@@ -1,7 +1,6 @@
 package com.cursor.controller;
 
 import com.cursor.MovieRatingApplication;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

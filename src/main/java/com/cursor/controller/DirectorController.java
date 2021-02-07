@@ -1,7 +1,7 @@
 package com.cursor.controller;
 
 import com.cursor.dto.DirectorDto;
-import com.cursor.service.DirectorService;
+import com.cursor.service.interfaces.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ public class DirectorController {
         return new ResponseEntity<>(directorService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/directors{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/directors/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DirectorDto> getById(
             @PathVariable(value = "id") Long id) {
         DirectorDto directorDto = directorService.getById(id);
@@ -34,7 +34,7 @@ public class DirectorController {
         }
         return new ResponseEntity<>(directorDto, HttpStatus.OK);
     }
-    
+
     @PostMapping(value = "/directors", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DirectorDto> add(@RequestBody DirectorDto directorDto) {
         DirectorDto director = directorService.add(directorDto);
@@ -45,8 +45,8 @@ public class DirectorController {
     public ResponseEntity<DirectorDto> remove(
             @PathVariable(value = "id") Long id
     ) {
-        DirectorDto directorDto = directorService.remove(id);
-        return new ResponseEntity<>(directorDto, HttpStatus.OK);
+        directorService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

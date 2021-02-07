@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 // TODO: Not all tests will pass now due to missing logic.
@@ -33,7 +34,7 @@ class MovieServiceImplTest {
             i++;
             movieDto.setTitle(String.format("some movie %s", i));
             movieDto.setDescription(String.format("some movie description %s", i));
-            movieDto.setCategory(Collections.singletonList(category));
+            movieDto.setCategory(Set.of(category));
             Assert.assertNotNull(movieServiceImpl.add(movieDto));
             System.out.println(movieDto);
         }
@@ -188,7 +189,7 @@ class MovieServiceImplTest {
         MovieDto expectedMovie = new MovieDto();
         expectedMovie.setTitle("Harry Potter");
         expectedMovie.setDescription("Movie about a boy, who survived");
-        expectedMovie.setCategory(List.of(Category.DRAM));
+        expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
         MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
