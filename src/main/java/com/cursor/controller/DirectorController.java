@@ -38,7 +38,7 @@ public class DirectorController {
     @PostMapping(value = "/directors", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DirectorDto> add(@RequestBody DirectorDto directorDto) {
         DirectorDto director = directorService.add(directorDto);
-        return new ResponseEntity<>(director, HttpStatus.OK);
+        return new ResponseEntity<>(director, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/directors/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
