@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class MovieDto {
     private String title;
-    private List<Category> category;
+    private List<Category> categories;
     private String shortDescription;
     private Double rateValue;
-    private List<DirectorDto> director;
+    private List<DirectorDto> directors;
 }
