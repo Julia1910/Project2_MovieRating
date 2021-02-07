@@ -1,6 +1,7 @@
 package com.cursor.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
@@ -8,13 +9,19 @@ import com.cursor.model.enums.Category;
 import com.cursor.service.MovieService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.xml.transform.OutputKeys;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,9 +29,16 @@ import java.util.List;
 
 class MovieControllerTest extends BaseControllerTest {
 
+    @InjectMocks
+    MovieController movieController;
+
+    @Mock
     private MovieService movieService;
+
     private final MovieDto movieDto;
     private final MovieDto emptyMovieDto;
+    private final List<MovieDto> movieDtos = new ArrayList<>();
+
 
     MovieControllerTest() {
         List<DirectorDto> directors = new ArrayList<>(Arrays.asList(
@@ -65,16 +79,65 @@ class MovieControllerTest extends BaseControllerTest {
                 -1d,
                 null
         );
+
+        for (int i = 0; i < 5; i++) {
+            movieDtos.add(movieDto);
+        }
     }
 
     @BeforeAll
     void setUp() {
-        movieService = Mockito.mock(MovieService.class);
+//        movieService = Mockito.mock(MovieService.class);
+
+//        Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
+//        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
+    }
+
+    @BeforeEach
+    void setUpMovieService() {
+//        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
+        Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
+        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
+        Mockito.when(movieService.getById(1L)).thenReturn(movieDto);
+
+        Mockito.when(
+                movieService.addRate(
+                        this.movieDto,
+                        this.movieDto.getRateValue().intValue())
+        )
+                .thenReturn(this.movieDto);
+
+        Mockito.when(movieService.getAll())
+                .thenReturn(new ArrayList<>())
+                .thenReturn(movieDtos);
+
+        Mockito.when(movieService.getAllByRatingAsc())
+                .thenReturn(movieDtos)
+                .thenReturn(new ArrayList<>());
+
+        Mockito.when(movieService.getAllByRatingDesc())
+                .thenReturn(new ArrayList<>())
+                .thenReturn(movieDtos);
+
+        Mockito.when(movieService.getAllByCategory(Category.COM))
+                .thenReturn(movieDtos)
+                .thenReturn(new ArrayList<>());
     }
 
     @Test
-    void addMovieSuccessTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie")
+    void addMovieSuccessTest() {
+//        Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
+
+        ResponseEntity<MovieDto> responseEntity = movieController.addMovie(movieDto);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.CREATED);
+
+        MovieDto movieDtoFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtoFromResponse, movieDto);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(movieDto));
 
@@ -87,24 +150,42 @@ class MovieControllerTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertEquals(movieDtoFromResponse, movieDto);
+        assertEquals(movieDtoFromResponse, movieDto);*/
     }
 
     @Test
-    void addMovieExpectNotAcceptableStatusTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie")
+    void addMovieExpectNotAcceptableStatusTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.addMovie(emptyMovieDto);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(emptyMovieDto));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());*/
     }
 
     @Test
-    void removeMovieSuccessTest() throws Exception {
-        Mockito.when(movieService.remove(1)).thenReturn(movieDto);
+    void removeMovieSuccessTest() {
+//        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/movie/" + 1);
+        ResponseEntity<MovieDto> responseEntity = movieController.remove(1L);
+
+        MovieDto movieDto = movieService.remove(1L);
+
+        assertEquals(movieDto, responseEntity.getBody());
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        MovieDto movieDtoFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtoFromResponse, movieDto);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/movie/" + 1);
 
         MvcResult result = mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -115,24 +196,50 @@ class MovieControllerTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertEquals(this.movieDto, movieDto);
+        assertEquals(this.movieDto, movieDto);*/
     }
 
     @Test
-    void deleteMovieExpectNotFoundStatusTest() throws Exception {
-        Mockito.when(movieService.remove(-1)).thenThrow(new Exception());
+    void removeMovieExpectNotFoundStatusTest() {
+//        Mockito.when(movieService.remove(-1)).thenThrow(new MovieController.UncorrectIdException(); // in UserServiceImpl should be used some custom exception
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/movie/" + -1);
+        ResponseEntity<MovieDto> responseEntity = movieController.remove(-1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/movie/" + -1);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());*/
     }
 
     @Test
-    void updateInfoSuccessTest() throws Exception {
-        Mockito.when(movieService.add(this.movieDto)).thenReturn(this.movieDto);
+    void updateInfoSuccessTest() {
+//        Mockito.when(movieService.add(this.movieDto)).thenReturn(this.movieDto);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie/" + 1)
+        MovieDto updatedMovieDto = movieDto;
+
+        updatedMovieDto.setCategories(
+                Arrays.asList(
+                        Category.COM,
+                        Category.ACT,
+                        Category.DRAM
+                )
+        );
+
+        Mockito.when(movieService.add(updatedMovieDto)).thenReturn(updatedMovieDto);
+
+        ResponseEntity<MovieDto> responseEntity = movieController.updateInfo(updatedMovieDto, 1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        MovieDto movieDtoFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtoFromResponse, updatedMovieDto);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie/" + 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(this.movieDto));
 
@@ -145,34 +252,54 @@ class MovieControllerTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertEquals(this.movieDto, movieDto);
+        assertEquals(this.movieDto, movieDto);*/
     }
 
     @Test
-    void updateInfoExpectNotFoundStatusTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie/" + -1)
+    void updateInfoExpectNotFoundStatusTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.updateInfo(movieDto, -1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie/" + -1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(movieDto));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());*/
     }
 
     @Test
-    void updateInfoExpectNotAcceptableStatusTest() throws Exception {
-        Mockito.when(movieService.add(emptyMovieDto)).thenThrow(new Exception());
+    void updateInfoExpectNotAcceptableStatusTest() {
+
+        ResponseEntity<MovieDto> responseEntity = movieController.updateInfo(emptyMovieDto, 1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+
+        /*Mockito.when(movieService.add(emptyMovieDto)).thenThrow(new Exception());
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/admin/movie/" + 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(emptyMovieDto));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());*/
     }
 
     @Test
-    void getByIdSuccessTest() throws Exception {
-        Mockito.when(movieService.getById(1)).thenReturn(this.movieDto);
+    void getByIdSuccessTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.getById(1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        MovieDto movieFromResponse = responseEntity.getBody();
+
+        assertEquals(movieFromResponse, movieDto);
+
+        /*Mockito.when(movieService.getById(1L)).thenReturn(this.movieDto);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/movie/" + 1);
 
@@ -185,27 +312,38 @@ class MovieControllerTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertEquals(this.movieDto, movieDto);
+        assertEquals(this.movieDto, movieDto);*/
     }
 
     @Test
-    void getByIdExpectNotFoundStatusTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/movie/" + -1);
+    void getByIdExpectNotFoundStatusTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.getById(-1L);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/movie/" + -1);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());*/
     }
 
     @Test
-    void addRateSuccessTest() throws Exception {
-        Mockito.when(
-                movieService.addRate(
-                        this.movieDto,
-                        (int) Math.rint(this.movieDto.getRateValue()))
-        ).
-                thenReturn(this.movieDto);
+    void addRateSuccessTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController
+                .addRate(
+                        movieDto,
+                        this.movieDto.getRateValue().intValue()
+                );
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        MovieDto movieDtoFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtoFromResponse, movieDto);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post(
                         "/movie/rate/" + (int) Math.rint(this.movieDto.getRateValue())
                 )
@@ -221,32 +359,51 @@ class MovieControllerTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertEquals(this.movieDto, movieDto);
+        assertEquals(this.movieDto, movieDto);*/
     }
 
     @Test
-    void addRateExpectNotFoundStatusTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/movie/rate/" + -1)
+    void addRateExpectNotFoundStatusTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.addRate(emptyMovieDto, 10);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/movie/rate/" + -1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(movieDto));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());*/
     }
 
     @Test
-    void addRateExpectInvalidRateStatusTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/movie/rate/" + -1)
+    void addRateExpectNotAcceptableStatusTest() {
+        ResponseEntity<MovieDto> responseEntity = movieController.addRate(movieDto, -1);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+
+        /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/movie/rate/" + -1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(movieDto));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());*/
     }
 
     @Test
-    void getAllSuccessTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllSuccessTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAll();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        List<MovieDto> movieDtosFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtosFromResponse, movieDtos);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             movieDtos.add(movieDto);
@@ -266,24 +423,40 @@ class MovieControllerTest extends BaseControllerTest {
                 }
         );
 
-        assertEquals(movieDtos, movieDtosFromResponse);
+        assertEquals(movieDtos, movieDtosFromResponse);*/
     }
 
     @Test
-    void getAllExpectNoContentStatusTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllExpectNoContentStatusTest() {
+//        Mockito.when(movieService.getAll()).thenReturn(new ArrayList<>());
+
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAll();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         Mockito.when(movieService.getAll()).thenReturn(movieDtos);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/movie/all");
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());*/
     }
 
     @Test
-    void getAllByRatingAscSuccessTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByRatingAscSuccessTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByRatingAsc();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        List<MovieDto> movieDtosFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtosFromResponse, movieDtos);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             movieDtos.add(movieDto);
@@ -303,24 +476,38 @@ class MovieControllerTest extends BaseControllerTest {
                 }
         );
 
-        assertEquals(movieDtos, movieDtosFromResponse);
+        assertEquals(movieDtos, movieDtosFromResponse);*/
     }
 
     @Test
-    void getAllByRatingAscExpectNoContentStatusTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByRatingAscExpectNoContentStatusTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByRatingAsc();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         Mockito.when(movieService.getAllByRatingAsc()).thenReturn(movieDtos);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/stats/rating");
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());*/
     }
 
     @Test
-    void getAllByRatingDescSuccessTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByRatingDescSuccessTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByRatingDesc();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        List<MovieDto> movieDtosFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtosFromResponse, movieDtos);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             movieDtos.add(movieDto);
@@ -340,24 +527,38 @@ class MovieControllerTest extends BaseControllerTest {
                 }
         );
 
-        assertEquals(movieDtos, movieDtosFromResponse);
+        assertEquals(movieDtos, movieDtosFromResponse);*/
     }
 
     @Test
-    void getAllByRatingDescExpectNoContentStatusTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByRatingDescExpectNoContentStatusTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByRatingDesc();
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         Mockito.when(movieService.getAllByRatingDesc()).thenReturn(movieDtos);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/stats/rating/desc");
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());*/
     }
 
     @Test
-    void getAllByCategorySuccessTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByCategorySuccessTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByCategory(Category.COM);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        List<MovieDto> movieDtosFromResponse = responseEntity.getBody();
+
+        assertEquals(movieDtosFromResponse, movieDtos);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             movieDtos.add(movieDto);
@@ -379,12 +580,17 @@ class MovieControllerTest extends BaseControllerTest {
                 }
         );
 
-        assertEquals(movieDtos, movieDtosFromResponse);
+        assertEquals(movieDtos, movieDtosFromResponse);*/
     }
 
     @Test
-    void getAllByCategoryExpectNoContentStatusTest() throws Exception {
-        List<MovieDto> movieDtos = new ArrayList<>();
+    void getAllByCategoryExpectNoContentStatusTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByCategory(Category.COM);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+
+        /*List<MovieDto> movieDtos = new ArrayList<>();
 
         Mockito.when(movieService.getAllByCategory(Category.COM)).thenReturn(movieDtos);
 
@@ -393,18 +599,23 @@ class MovieControllerTest extends BaseControllerTest {
                 .content(OBJECT_MAPPER.writeValueAsString(Category.COM));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());*/
     }
 
-    @Test
-    void getAllByCategoryExpectNotAcceptableStatusTest() throws Exception {
-        Mockito.when(movieService.getAllByCategory(null)).thenThrow(new Exception());
+    /*@Test
+    void getAllByCategoryExpectNotAcceptableStatusTest() {
+        ResponseEntity<List<MovieDto>> responseEntity = movieController.getAllByCategory(null);
+
+        assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+
+        *//*Mockito.when(movieService.getAllByCategory(null)).thenThrow(new Exception());
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/stats/category")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(null));
 
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
-    }
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());*//*
+    }*/
 }
