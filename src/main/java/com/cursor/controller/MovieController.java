@@ -2,7 +2,7 @@ package com.cursor.controller;
 
 import com.cursor.dto.MovieDto;
 import com.cursor.model.enums.Category;
-import com.cursor.service.MovieService;
+import com.cursor.service.interfaces.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +14,16 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
-    private boolean checkMovieDtoFlag = true;
-    private boolean checkIdFlag = true;
-    private boolean checkRateFlag = true;
+    private final boolean checkMovieDtoFlag = true;
+    private final boolean checkIdFlag = true;
+    private final boolean checkRateFlag = true;
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
     private void checkMovieDto(MovieDto movieDto) throws IncorrectMovieDtoException {
-        if (movieDto.getTitle().isBlank() || movieDto.getCategories().isEmpty()
+        if (movieDto.getTitle().isBlank() || movieDto.getCategory().isEmpty()
                 || movieDto.getShortDescription().isBlank())
             throw new IncorrectMovieDtoException("MovieDto's details are incorrect");
     }
@@ -60,7 +60,7 @@ public class MovieController {
             value = "/admin/movie/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<MovieDto> remove(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> remove(@PathVariable Long id) {
         if (checkIdFlag) {
             try {
                 checkId(id);
@@ -69,8 +69,8 @@ public class MovieController {
             }
         }
 
-        MovieDto movieDto = movieService.remove(id);
-        return new ResponseEntity<>(movieDto, HttpStatus.OK);
+        movieService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(

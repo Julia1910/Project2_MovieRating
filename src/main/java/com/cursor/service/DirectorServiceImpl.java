@@ -5,6 +5,7 @@ import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
 import com.cursor.model.Director;
 import com.cursor.model.Movie;
+import com.cursor.service.interfaces.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

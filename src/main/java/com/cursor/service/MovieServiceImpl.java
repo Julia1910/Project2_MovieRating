@@ -34,7 +34,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDto addRate(MovieDto movie, int rate) {
         String title = movie.getTitle();
-        String description = movie.getDescription();
+        String description = movie.getShortDescription();
         Movie movie1 = movieRepository.findByTitleAndDescription(title, description);
         Long movieId = movie1.getId();
         Rate movieRate = new Rate();
@@ -95,7 +95,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void remove(Long id) {
+    public MovieDto remove(Long id) {
         movieRepository.deleteById(id);
+        return getById(id);
     }
 }

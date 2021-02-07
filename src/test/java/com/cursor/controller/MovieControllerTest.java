@@ -6,26 +6,13 @@ import static org.assertj.core.api.Assertions.*;
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
 import com.cursor.model.enums.Category;
-import com.cursor.service.MovieService;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.cursor.service.interfaces.MovieService;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.xml.transform.OutputKeys;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 class MovieControllerTest extends BaseControllerTest {
 
@@ -66,7 +53,7 @@ class MovieControllerTest extends BaseControllerTest {
 
         movieDto = new MovieDto(
                 "Home alone",
-                Collections.singletonList(Category.COM),
+                Set.of(Category.COM),
                 "Little kid bullies two old thives",
                 5d,
                 directors
@@ -97,7 +84,7 @@ class MovieControllerTest extends BaseControllerTest {
     void setUpMovieService() {
 //        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
         Mockito.when(movieService.add(movieDto)).thenReturn(movieDto);
-        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
+//        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
         Mockito.when(movieService.getById(1L)).thenReturn(movieDto);
 
         Mockito.when(
@@ -172,7 +159,7 @@ class MovieControllerTest extends BaseControllerTest {
     void removeMovieSuccessTest() {
 //        Mockito.when(movieService.remove(1L)).thenReturn(movieDto);
 
-        ResponseEntity<MovieDto> responseEntity = movieController.remove(1L);
+        ResponseEntity<HttpStatus> responseEntity = movieController.remove(1L);
 
         MovieDto movieDto = movieService.remove(1L);
 
@@ -181,9 +168,9 @@ class MovieControllerTest extends BaseControllerTest {
         assertThat(responseEntity.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
 
-        MovieDto movieDtoFromResponse = responseEntity.getBody();
+//        MovieDto movieDtoFromResponse = responseEntity.getBody();
 
-        assertEquals(movieDtoFromResponse, movieDto);
+//        assertEquals(movieDtoFromResponse, movieDto);
 
         /*MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/admin/movie/" + 1);
 
@@ -203,7 +190,7 @@ class MovieControllerTest extends BaseControllerTest {
     void removeMovieExpectNotFoundStatusTest() {
 //        Mockito.when(movieService.remove(-1)).thenThrow(new MovieController.UncorrectIdException(); // in UserServiceImpl should be used some custom exception
 
-        ResponseEntity<MovieDto> responseEntity = movieController.remove(-1L);
+        ResponseEntity<HttpStatus> responseEntity = movieController.remove(-1L);
 
         assertThat(responseEntity.getStatusCode())
                 .isEqualTo(HttpStatus.NOT_FOUND);
@@ -220,8 +207,8 @@ class MovieControllerTest extends BaseControllerTest {
 
         MovieDto updatedMovieDto = movieDto;
 
-        updatedMovieDto.setCategories(
-                Arrays.asList(
+        updatedMovieDto.setCategory(
+                Set.of(
                         Category.COM,
                         Category.ACT,
                         Category.DRAM
