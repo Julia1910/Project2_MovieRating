@@ -28,7 +28,7 @@ public class DirectorServiceImplTest {
         movie1Dto.setTitle("Titanic");
         movie1Dto.setCategory(categoriesDto);
         movie1Dto.setDescription("Cry cry cry");
-        movie1Dto.setRating(rate);
+        movie1Dto.setRateValue(rate);
         movie1Dto.setDirectors(directorDtos);
         gDto.add(movie1Dto);
         directorMax.setMovies(gDto);
@@ -50,7 +50,7 @@ public class DirectorServiceImplTest {
         movie.setTitle("Titanic");
         movie.setCategory(categories);
         movie.setDescription("Cry cry cry");
-        movie.setRating(rate);
+        movie.setRateValue(rate);
         movie.setDirectors(director);
         movieList.add(movie);
         directorMax.setMovies(movieList);

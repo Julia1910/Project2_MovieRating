@@ -15,6 +15,6 @@ public class MovieDto {
     private String title;
     private Set<Category> category;
     private String description;
-    private Double rating;
+    private Double rateValue;
     private List<DirectorDto> directors;
 }

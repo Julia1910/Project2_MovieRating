@@ -1,7 +1,7 @@
 package com.cursor.handlers;
 
 import com.cursor.exceptions.IncorrectMovieDtoException;
-import com.cursor.exceptions.IncorrectRateException;
+import com.cursor.exceptions.IncorrectRateValueException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class NotAcceptableExceptionHandler extends ResponseEntityExceptionHandle
     @ExceptionHandler(
             value = {
                     IncorrectMovieDtoException.class,
-                    IncorrectRateException.class
+                    IncorrectRateValueException.class
             }
     )
     ResponseEntity<Object> handleConflict(

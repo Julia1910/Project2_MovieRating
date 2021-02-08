@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
-import com.cursor.exceptions.IncorrectMovieDtoException;
 import com.cursor.model.enums.Category;
 import com.cursor.service.interfaces.MovieService;
 import org.junit.jupiter.api.*;
@@ -70,9 +69,9 @@ class MovieControllerUnitTest extends BaseControllerTest {
         Mockito.when(movieServiceMock.getById(1L)).thenReturn(movieDto);
 
         Mockito.when(
-                movieServiceMock.addRate(
+                movieServiceMock.addRateValue(
                         this.movieDto,
-                        this.movieDto.getRating().intValue())
+                        this.movieDto.getRateValue().intValue())
         )
                 .thenReturn(this.movieDto);
 
@@ -94,7 +93,7 @@ class MovieControllerUnitTest extends BaseControllerTest {
     }
 
     @Test
-    void addMovieSuccessTest() throws IncorrectMovieDtoException {
+    void addMovieSuccessTest() {
         ResponseEntity<MovieDto> responseEntity = movieController.addMovie(movieDto);
 
         assertThat(responseEntity.getStatusCode())
@@ -158,7 +157,7 @@ class MovieControllerUnitTest extends BaseControllerTest {
         ResponseEntity<MovieDto> responseEntity = movieController
                 .addRate(
                         movieDto,
-                        this.movieDto.getRating().intValue()
+                        this.movieDto.getRateValue().intValue()
                 );
 
         assertThat(responseEntity.getStatusCode())

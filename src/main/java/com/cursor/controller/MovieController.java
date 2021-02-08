@@ -67,8 +67,19 @@ public class MovieController {
     public ResponseEntity<MovieDto> addRate(
             @RequestBody MovieDto movieDto,
             @PathVariable int rate) {
-        MovieDto movieDtoFromController = movieService.addRate(movieDto, rate);
-        return new ResponseEntity<>(movieDtoFromController, HttpStatus.OK);
+        MovieDto movieDtoFromService = movieService.addRateValue(movieDto, rate);
+        return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
+    }
+
+    @PostMapping(
+            value = "/movie/{movieId}/rate/{rate}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<MovieDto> addRateById(
+            @PathVariable Long movieId,
+            @PathVariable int rate) {
+        MovieDto movieDtoFromService = movieService.addRateValueById(movieId, rate);
+        return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 
     @GetMapping(

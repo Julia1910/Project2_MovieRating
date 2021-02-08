@@ -1,8 +1,6 @@
 package com.cursor.service;
 
 import com.cursor.dto.MovieDto;
-import com.cursor.exceptions.IncorrectMovieDtoException;
-import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.enums.Category;
 import org.junit.Assert;
 import org.junit.jupiter.api.MethodOrderer;
@@ -191,9 +189,9 @@ class MovieServiceImplTest {
         expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
-        MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
+        MovieDto actualMovie = movieServiceImpl.addRateValue(expectedMovie, 7);
 
-        expectedMovie.setRating(7.5);
+        expectedMovie.setRateValue(7.5);
 
 
         Assert.assertEquals(expectedMovie, actualMovie);
