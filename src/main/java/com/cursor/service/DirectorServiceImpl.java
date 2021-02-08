@@ -5,6 +5,7 @@ import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
 import com.cursor.model.Director;
 import com.cursor.model.Movie;
+import com.cursor.service.interfaces.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +42,8 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDto remove(Long id) {
-        DirectorDto directorDto = entityToDto(directorRepository.findById(id).orElseThrow());
+    public void remove(Long id) {
         directorRepository.deleteById(id);
-        return directorDto;
     }
 
     public static Director dtoToEntity(DirectorDto directorDto) {

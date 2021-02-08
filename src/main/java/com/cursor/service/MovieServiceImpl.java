@@ -34,7 +34,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDto addRate(MovieDto movie, int rate) {
         String title = movie.getTitle();
-        String description = movie.getDescription();
+        String description = movie.getShortDescription();
         Movie movie1 = movieRepository.findByTitleAndDescription(title, description);
         Long movieId = movie1.getId();
         Rate movieRate = new Rate();
