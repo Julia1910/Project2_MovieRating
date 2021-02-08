@@ -120,9 +120,14 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto getById(Long id) {
-        return movieRepository.findById(id).
+        MovieDto movieDto = movieRepository.findById(id).
                 map(movie -> modelMapper.map(movie, MovieDto.class))
                 .orElseThrow(() -> new NotFoundException(id));
+
+        List<DirectorDto> directors = movieDto.getDirectors();
+        directors = directors.subList(0, directors.size() / 2);
+        movieDto.setDirectors(directors);
+        return movieDto;
     }
 
     @Override
