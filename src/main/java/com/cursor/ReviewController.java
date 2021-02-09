@@ -25,7 +25,7 @@ public class ReviewController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDto> add(@RequestBody ReviewDto reviewDto) {
         ReviewDto review = reviewService.add(reviewDto);
-        return new ResponseEntity<>(review, HttpStatus.OK);
+        return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,9 +36,10 @@ public class ReviewController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDto> getById(@PathVariable("id") Long id) {
-        ReviewDto reviewDto = reviewService.getById(id);
+        ReviewDto reviewDto;
+        reviewDto = reviewService.getById(id);
         if (reviewDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(reviewDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(reviewDto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
