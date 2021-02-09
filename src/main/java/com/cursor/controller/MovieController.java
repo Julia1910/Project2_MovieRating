@@ -34,7 +34,8 @@ public class MovieController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<MovieDto> remove(@PathVariable Long id) {
-        MovieDto movieDtoFromService = movieService.remove(id);
+        MovieDto movieDtoFromService = movieService.getById(id);
+        movieService.remove(id);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 

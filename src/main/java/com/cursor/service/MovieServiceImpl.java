@@ -141,10 +141,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDto remove(Long id) {
+    public void remove(Long id) {
         MovieDto movieDto = getById(id);
         movieRepository.deleteById(id);
-        return movieDto;
     }
 
     @Override

@@ -50,11 +50,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDto remove(Long id) {
+    public void remove(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow();
         ReviewDto reviewDto = setReviewDto(review);
         reviewRepository.delete(review);
-        return reviewDto;
     }
 
     private Review setReview(ReviewDto reviewDto) {
