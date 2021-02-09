@@ -1,4 +1,4 @@
-package com.cursor;
+package com.cursor.service;
 
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
@@ -27,8 +27,8 @@ public class DirectorServiceImplTest {
         MovieDto movie1Dto = new MovieDto();
         movie1Dto.setTitle("Titanic");
         movie1Dto.setCategory(categoriesDto);
-        movie1Dto.setShortDescription("Cry cry cry");
-        movie1Dto.setRateValue(rate);
+        movie1Dto.setDescription("Cry cry cry");
+        movie1Dto.setRating(rate);
         movie1Dto.setDirectors(directorDtos);
         gDto.add(movie1Dto);
         directorMax.setMovies(gDto);
