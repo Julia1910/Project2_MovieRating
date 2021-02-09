@@ -26,7 +26,7 @@ public class Movie {
     private String description;
 
     @Formula("(select avg(r.rating) from rates r where r.movie_id = id)")
-    private Double rateValue;
+    private Double rating;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Directing",

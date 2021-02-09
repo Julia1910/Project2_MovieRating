@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    List<Movie> findByRateValueIsNotNullOrderByRateValueAsc();
+    List<Movie> findByRatingIsNotNullOrderByRatingAsc();
 
-    List<Movie> findByRateValueIsNotNullOrderByRateValueDesc();
+    List<Movie> findByRatingIsNotNullOrderByRatingDesc();
 
     List<Movie> findByCategory(Category category);
 

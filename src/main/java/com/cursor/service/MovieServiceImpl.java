@@ -6,7 +6,7 @@ import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
 import com.cursor.exceptions.NotFoundException;
 import com.cursor.exceptions.IncorrectMovieDtoException;
-import com.cursor.exceptions.IncorrectRateValueException;
+import com.cursor.exceptions.IncorrectRatingException;
 import com.cursor.model.Director;
 import com.cursor.model.Movie;
 import com.cursor.model.Rate;
@@ -38,10 +38,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDto addRateValue(MovieDto movie, int rateValue) {
+    public MovieDto addRating(MovieDto movie, int rateValue) {
         try {
-            checkRateValue(rateValue);
-        } catch (IncorrectRateValueException exception) {
+            checkRating(rateValue);
+        } catch (IncorrectRatingException exception) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_ACCEPTABLE,
                     exception.getMessage(),
@@ -69,16 +69,16 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDto addRateValueById(Long movieId, int rate) {
+    public MovieDto addRatingById(Long movieId, int rate) {
         MovieDto movieDto = getById(movieId);
-        movieDto = addRateValue(movieDto, rate);
+        movieDto = addRating(movieDto, rate);
         return movieDto;
     }
 
     @Override
     public List<MovieDto> getAllByRatingAsc() {
         List<MovieDto> movieDtos = new ArrayList<>();
-        for (Movie movie : movieRepository.findByRateValueIsNotNullOrderByRateValueAsc()) {
+        for (Movie movie : movieRepository.findByRatingIsNotNullOrderByRatingAsc()) {
             movieDtos.add(modelMapper.map(movie, MovieDto.class));
         }
         return movieDtos;
@@ -87,7 +87,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDto> getAllByRatingDesc() {
         List<MovieDto> movieDtos = new ArrayList<>();
-        for (Movie movie : movieRepository.findByRateValueIsNotNullOrderByRateValueDesc()) {
+        for (Movie movie : movieRepository.findByRatingIsNotNullOrderByRatingDesc()) {
             movieDtos.add(modelMapper.map(movie, MovieDto.class));
         }
         return movieDtos;
@@ -171,7 +171,7 @@ public class MovieServiceImpl implements MovieService {
         movieFromDatabase.setTitle(movieDto.getTitle());
         movieFromDatabase.setCategory(movieDto.getCategory());
         movieFromDatabase.setDescription(movieDto.getDescription());
-        movieFromDatabase.setRateValue(movieDto.getRateValue());
+        movieFromDatabase.setRating(movieDto.getRating());
         movieFromDatabase.setDirectors(directors);
 
         movieRepository.save(movieFromDatabase);
@@ -185,8 +185,8 @@ public class MovieServiceImpl implements MovieService {
             throw new IncorrectMovieDtoException("MovieDto's details are incorrect");
     }
 
-    private void checkRateValue(int rateValue) throws IncorrectRateValueException {
+    private void checkRating(int rateValue) throws IncorrectRatingException {
         if (rateValue < 0 || rateValue > 10)
-            throw new IncorrectRateValueException("The rate value is incorrect");
+            throw new IncorrectRatingException("The rate value is incorrect");
     }
 }

@@ -189,9 +189,9 @@ class MovieServiceImplTest {
         expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
-        MovieDto actualMovie = movieServiceImpl.addRateValue(expectedMovie, 7);
+        MovieDto actualMovie = movieServiceImpl.addRating(expectedMovie, 7);
 
-        expectedMovie.setRateValue(7.5);
+        expectedMovie.setRating(7.5);
 
 
         Assert.assertEquals(expectedMovie, actualMovie);

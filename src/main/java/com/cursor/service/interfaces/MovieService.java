@@ -7,9 +7,9 @@ import com.cursor.model.enums.Category;
 import java.util.List;
 
 public interface MovieService extends Service<MovieDto> {
-    MovieDto addRateValue(MovieDto movie, int rate) throws NotFoundException;
+    MovieDto addRating(MovieDto movie, int rate) throws NotFoundException;
 
-    MovieDto addRateValueById(Long movieId, int rate);
+    MovieDto addRatingById(Long movieId, int rate);
 
     List<MovieDto> getAllByRatingAsc();
 

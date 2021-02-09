@@ -69,9 +69,9 @@ class MovieControllerUnitTest extends BaseControllerTest {
         Mockito.when(movieServiceMock.getById(1L)).thenReturn(movieDto);
 
         Mockito.when(
-                movieServiceMock.addRateValue(
+                movieServiceMock.addRating(
                         this.movieDto,
-                        this.movieDto.getRateValue().intValue())
+                        this.movieDto.getRating().intValue())
         )
                 .thenReturn(this.movieDto);
 
@@ -157,7 +157,7 @@ class MovieControllerUnitTest extends BaseControllerTest {
         ResponseEntity<MovieDto> responseEntity = movieController
                 .addRate(
                         movieDto,
-                        this.movieDto.getRateValue().intValue()
+                        this.movieDto.getRating().intValue()
                 );
 
         assertThat(responseEntity.getStatusCode())

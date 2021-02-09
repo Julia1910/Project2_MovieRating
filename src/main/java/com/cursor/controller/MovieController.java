@@ -67,7 +67,7 @@ public class MovieController {
     public ResponseEntity<MovieDto> addRate(
             @RequestBody MovieDto movieDto,
             @PathVariable int rate) {
-        MovieDto movieDtoFromService = movieService.addRateValue(movieDto, rate);
+        MovieDto movieDtoFromService = movieService.addRating(movieDto, rate);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 
@@ -78,7 +78,7 @@ public class MovieController {
     public ResponseEntity<MovieDto> addRateById(
             @PathVariable Long movieId,
             @PathVariable int rate) {
-        MovieDto movieDtoFromService = movieService.addRateValueById(movieId, rate);
+        MovieDto movieDtoFromService = movieService.addRatingById(movieId, rate);
         return new ResponseEntity<>(movieDtoFromService, HttpStatus.OK);
     }
 

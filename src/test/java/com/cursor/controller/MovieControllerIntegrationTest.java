@@ -247,8 +247,8 @@ class MovieControllerIntegrationTest extends BaseControllerTest {
                 MovieDto.class
         );
 
-        assertNotEquals(movieDto1.getRateValue(),
-                movieDto2.getRateValue());
+        assertNotEquals(movieDto1.getRating(),
+                movieDto2.getRating());
     }
 
     @Test
