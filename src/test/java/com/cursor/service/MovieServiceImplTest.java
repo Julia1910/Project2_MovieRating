@@ -3,7 +3,6 @@ package com.cursor.service;
 import com.cursor.dto.MovieDto;
 import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.enums.Category;
-import com.cursor.service.MovieServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -33,7 +32,7 @@ class MovieServiceImplTest {
         for (Category category : Category.values()) {
             i++;
             movieDto.setTitle(String.format("some movie %s", i));
-            movieDto.setShortDescription(String.format("some movie description %s", i));
+            movieDto.setDescription(String.format("some movie description %s", i));
             movieDto.setCategory(Collections.singleton(category));
             Assert.assertNotNull(movieServiceImpl.add(movieDto));
             System.out.println(movieDto);
@@ -188,13 +187,13 @@ class MovieServiceImplTest {
     void testAddRate() {
         MovieDto expectedMovie = new MovieDto();
         expectedMovie.setTitle("Harry Potter");
-        expectedMovie.setShortDescription("Movie about a boy, who survived");
+        expectedMovie.setDescription("Movie about a boy, who survived");
         expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
         MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
 
-        expectedMovie.setRateValue(7.5);
+        expectedMovie.setRating(7.5);
 
 
         Assert.assertEquals(expectedMovie, actualMovie);

@@ -54,8 +54,8 @@ public class DirectorServiceImpl implements DirectorService {
         for (MovieDto m : directorDto.getMovies()) {
             Movie movie = new Movie();
             movie.setTitle(m.getTitle());
-            movie.setRating(m.getRateValue());
-            movie.setDescription(m.getShortDescription());
+            movie.setRating(m.getRating());
+            movie.setDescription(m.getDescription());
             movie.setCategory(m.getCategory());
             movie.setDirectors(directorDtoToDirector(m.getDirectors()));
             movieList.add(movie);
@@ -83,8 +83,8 @@ public class DirectorServiceImpl implements DirectorService {
         for (Movie m : director.getMovies()) {
             MovieDto movie = new MovieDto();
             movie.setTitle(m.getTitle());
-            movie.setRateValue(m.getRating());
-            movie.setShortDescription(m.getDescription());
+            movie.setRating(m.getRating());
+            movie.setDescription(m.getDescription());
             movie.setCategory(m.getCategory());
             movie.setDirectors(directorToDirectorDto(m.getDirectors()));
             movieList.add(movie);

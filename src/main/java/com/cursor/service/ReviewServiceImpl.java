@@ -35,8 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto getById(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow();
-        ReviewDto reviewDto = setReviewDto(review);
-        return reviewDto;
+        return setReviewDto(review);
     }
 
     @Override
@@ -53,11 +52,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void remove(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow();
-        ReviewDto reviewDto = setReviewDto(review);
         reviewRepository.delete(review);
     }
 
-    private Review setReview(ReviewDto reviewDto) {
+       public Review setReview(ReviewDto reviewDto) {
         Review review = new Review();
         review.setMovie(movieRepository.findById(reviewDto.getMovieId()).orElseThrow());
         review.setLiked(reviewDto.getLiked());
@@ -65,7 +63,7 @@ public class ReviewServiceImpl implements ReviewService {
         return review;
     }
 
-    private ReviewDto setReviewDto(Review review) {
+        public ReviewDto setReviewDto(Review review) {
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setMovieId(review.getMovie().getId());
         reviewDto.setLiked(review.getLiked());
