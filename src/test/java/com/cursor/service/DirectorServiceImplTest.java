@@ -1,4 +1,4 @@
-package com.cursor;
+package com.cursor.service;
 
 import com.cursor.dto.DirectorDto;
 import com.cursor.dto.MovieDto;
