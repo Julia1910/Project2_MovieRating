@@ -31,7 +31,7 @@ class MovieServiceImplTest {
             i++;
             movieDto.setTitle(String.format("some movie %s", i));
             movieDto.setDescription(String.format("some movie description %s", i));
-            movieDto.setCategory(Set.of(category));
+            movieDto.setCategory(Collections.singleton(category));
             Assert.assertNotNull(movieServiceImpl.add(movieDto));
             System.out.println(movieDto);
         }
