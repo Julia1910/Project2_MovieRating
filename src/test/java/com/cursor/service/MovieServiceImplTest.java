@@ -1,9 +1,7 @@
 package com.cursor.service;
 
 import com.cursor.dto.MovieDto;
-import com.cursor.exceptions.NotFoundException;
 import com.cursor.model.enums.Category;
-import com.cursor.service.MovieServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +39,7 @@ class MovieServiceImplTest {
 
     @Test
     @Order(2)
-    void TestFindById() throws NotFoundException {
+    void TestFindById() {
         Long id = 69L;
         MovieDto movieDto = movieServiceImpl.getById(id);
         Assert.assertNotNull(String.format("record with id = %s not found", id), movieDto);
@@ -192,7 +189,7 @@ class MovieServiceImplTest {
         expectedMovie.setCategory(Set.of(Category.DRAM));
         expectedMovie.setDirectors(List.of());
 
-        MovieDto actualMovie = movieServiceImpl.addRate(expectedMovie, 7);
+        MovieDto actualMovie = movieServiceImpl.addRating(expectedMovie, 7);
 
         expectedMovie.setRating(7.5);
 
