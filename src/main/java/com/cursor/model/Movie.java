@@ -22,12 +22,13 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Category> category;
+
     private String description;
 
     @Formula("(select avg(r.rating) from rates r where r.movie_id = id)")
     private Double rating;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Directing",
             joinColumns =
                     {@JoinColumn(name = "movie_id")},

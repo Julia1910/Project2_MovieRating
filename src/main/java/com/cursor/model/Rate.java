@@ -1,6 +1,8 @@
 package com.cursor.model;
 
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ public class Rate {
 
     @ManyToOne
     @JoinColumn(name = "movie_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Movie movie;
 
     private Integer rating;
