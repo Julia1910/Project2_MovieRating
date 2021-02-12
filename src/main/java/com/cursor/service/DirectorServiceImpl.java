@@ -43,7 +43,6 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void remove(Long id) {
-        DirectorDto directorDto = entityToDto(directorRepository.findById(id).orElseThrow());
         directorRepository.deleteById(id);
     }
 
